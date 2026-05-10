@@ -1,0 +1,631 @@
+/* ========================================
+   NYPD Citation System - Main Stylesheet
+   ======================================== */
+
+/* CSS VARIABLES: Colors used throughout the site */
+:root {
+  /* Primary Colors (NYPD Flag) */
+  --primary-color: #003da5;      /* NYPD Dark Blue */
+  --primary-light: #0052cc;       /* Lighter NYPD Blue */
+  --primary-dark: #002171;        /* Darker Blue */
+  
+  /* Secondary Colors (NYPD Flag Green) */
+  --secondary-color: #2d8659;     /* NYPD Green */
+  --secondary-light: #3da070;     /* Lighter Green */
+  
+  /* Accent Colors */
+  --white-accent: #ffffff;        /* White from flag */
+  --success-color: #2d8659;       /* Green (matches flag) */
+  --danger-color: #c41e3a;        /* Deep red for errors */
+  --warning-color: #ffc107;       /* Yellow for warnings */
+  
+  /* Neutral Colors */
+  --light-color: #f8f9fa;         /* Very light gray */
+  --medium-color: #e9ecef;        /* Medium gray */
+  --dark-color: #343a40;          /* Dark gray/black */
+  --text-color: #212529;          /* Dark text */
+  
+  /* Effects */
+  --box-shadow: 0 2px 8px rgba(0, 61, 165, 0.1);
+  --box-shadow-lg: 0 4px 16px rgba(0, 61, 165, 0.15);
+  --border-radius: 8px;
+}
+
+/* ========================================
+   GLOBAL STYLES: Applied to all elements
+   ======================================== */
+
+* {
+  margin: 0;                /* Remove default spacing */
+  padding: 0;               /* Remove default padding */
+  box-sizing: border-box;   /* Include padding in width calculations */
+}
+
+html {
+  scroll-behavior: smooth;  /* Smooth scrolling effect */
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;        /* Space between lines */
+  color: var(--text-color);
+  background-color: #fff;
+}
+
+/* Remove bullet points from lists */
+ul, ol {
+  list-style: none;
+}
+
+/* Style all links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;  /* Smooth color change on hover */
+}
+
+a:hover {
+  color: var(--primary-light);
+}
+
+/* ========================================
+   CONTAINER: Holds and centers content
+   ======================================== */
+
+.container {
+  max-width: 1200px;      /* Maximum width on desktop */
+  margin: 0 auto;         /* Center horizontally */
+  padding: 0 20px;        /* Padding on sides for mobile */
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;      /* Less padding on mobile */
+  }
+}
+
+/* ========================================
+   NAVIGATION BAR
+   ======================================== */
+
+.navbar {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: var(--box-shadow);
+  position: sticky;        /* Stays at top when scrolling */
+  top: 0;
+  z-index: 100;            /* Appears above other content */
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;  /* Logo on left, links on right */
+  align-items: center;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;               /* Space between links */
+  align-items: center;
+}
+
+.nav-links a {
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background-color: var(--secondary-color);
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+  .navbar .container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* ========================================
+   HERO SECTION: Welcome banner
+   ======================================== */
+
+.hero {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: white;
+  padding: 6rem 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-content .subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile Hero */
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 1rem;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-content .subtitle {
+    font-size: 1rem;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-buttons .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+/* Primary Button (Main action) */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);  /* Move up slightly */
+  box-shadow: var(--box-shadow-lg);
+}
+
+/* Secondary Button - Now uses NYPD Green */
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: white;
+  border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-light);
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-lg);
+}
+
+/* Outline Button (Less empdhasis) */
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--light-color);
+  border-color: var(--primary-dark);
+}
+
+/* Full width button */
+.btn-block {
+  width: 100%;
+  display: block;
+}
+
+/* ========================================
+   FEATURES SECTION
+   ======================================== */
+
+.features {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.section-intro {
+  font-size: 1.1rem;
+  color: var(--medium-color);
+  margin-bottom: 3rem;
+}
+
+/* Grid Layout: 4 columns on desktop, responsive */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);  /* Move up on hover */
+  box-shadow: var(--box-shadow-lg);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.8;
+}
+
+/* Mobile Features */
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem;
+  }
+}
+
+/* ========================================
+   INFO SECTION: User types
+   ======================================== */
+
+.info {
+  padding: 4rem 0;
+  background-color: var(--light-color);
+}
+
+.info h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--primary-color);
+}
+
+.user-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.user-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  border-left: 5px solid var(--primary-color);
+  box-shadow: var(--box-shadow);
+}
+
+.user-card h3 {
+  font-size: 1.3rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.user-card ul {
+  list-style: none;
+  margin-bottom: 1.5rem;
+}
+
+.user-card li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.user-card li::before {
+  content: "✓";  /* Checkmark */
+  position: absolute;
+  left: 0;
+  color: var(--success-color);
+  font-weight: bold;
+}
+
+.user-card .btn {
+  display: block;
+  width: 100%;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+.footer {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+  margin-top: 4rem;
+}
+
+.footer p {
+  margin: 0.5rem 0;
+  opacity: 0.9;
+}
+
+/* ========================================
+   LOGIN PAGE STYLES
+   ======================================== */
+
+.login-main {
+  min-height: calc(100vh - 200px);  /* Full screen minus nav and footer */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-color);
+  padding: 2rem 0;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 0 20px;
+}
+
+.login-box {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-lg);
+  border-top: 4px solid var(--primary-color);
+}
+
+.login-box h2 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   FORM STYLES
+   ======================================== */
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 61, 165, 0.1);
+}
+
+/* Checkbox styles */
+.form-group.checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-group.checkbox input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.form-group.checkbox label {
+  margin-bottom: 0;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+/* Error hint text */
+.error-hint {
+  display: block;
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* ========================================
+   ALERTS (Error & Success Messages)
+   ======================================== */
+
+.alert {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--border-radius);
+  border-left: 4px solid;
+  font-weight: 500;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border-left-color: var(--danger-color);
+}
+
+.alert-success {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-left-color: var(--success-color);
+}
+
+.alert-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-left-color: var(--warning-color);
+}
+
+/* ========================================
+   LOGIN BUTTONS & LINKS
+   ======================================== */
+
+.btn-block {
+  width: 100%;
+  display: block;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+/* Loading spinner animation */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.login-links {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.login-links p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.login-links a {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+  color: var(--primary-dark);
+}
+
+/* ========================================
+   DEMO INFO BOX
+   ======================================== */
+
+.demo-info {
+  background-color: #f0f4ff;
+  border: 1px solid #d0e1ff;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.demo-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--primary-color);
+  font-size: 0.95rem;
+}
+
+.demo-info p {
+  margin: 0.3rem 0;
+  color: #666;
+}
+
+/* ========================================
+   RESPONSIVE LOGIN
+   ======================================== */
+
+@media (max-width: 640px) {
+  .login-box {
+    padding: 2rem 1.5rem;
+  }
+  
+  .login-box h2 {
+    font-size: 1.5rem;
+  }
+}
