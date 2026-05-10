@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NYPD Citation System - Officer Dashboard</title>
+        <link rel="stylesheet" href="../css/dashboard.css">
+    </head>
+
+    <body>
+        <!-- NAVIGATION BAR -->
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>NYPD Citation System</h1>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="#" id="logout-btn" style="cursor: pointer; color: white;">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <main class="container officer-dashboard">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1>Officer Dashboard</h1>
+                <p id="user-info">Badge: <strong id="user-badge">Loading...</strong></p>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-citations">0</div>
+                    <div class="stat-label">Total Citations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="issued-today">0</div>
+                    <div class="stat-label">Issued Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-citations">0</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="paid-citations">0</div>
+                    <div class="stat-label">Paid</div>
+                </div>
+            </div>
+
+            <!-- Dashboard Tabs -->
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" data-tab="view-citations">📋 View All Citations</button>
+                <button class="tab-btn" data-tab="issue-citation">➕ Issue New Citation</button>
+            </div>
+
+            <!-- TAB 1: View All Citations -->
+            <div id="view-citations" class="content-section active">
+                <h3>All Citations</h3>
+                
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="form-group">
+                        <label for="filter-status">Filter by Status:</label>
+                        <select id="filter-status">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="paid">Paid</option>
+                            <option value="dismissed">Dismissed</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" id="apply-filter-btn">Apply Filter</button>
+                    <button class="btn btn-primary" id="refresh-btn">🔄 Refresh</button>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" class="loading" style="display: none;">
+                    <div class="spinner-large"></div>
+                    <p>Loading citations...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="error-state" class="alert alert-error" style="display: none;">
+                    <span id="error-text"></span>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="no-data" style="display: none;">
+                    <p>📋 No citations found</p>
+                </div>
+
+                <!-- Citations Table -->
+                <div id="citations-table-wrapper" style="display: none;">
+                    <table class="citations-table">
+                        <thead>
+                            <tr>
+                                <th>Citation #</th>
+                                <th>Driver License</th>
+                                <th>Violation</th>
+                                <th>Date Issued</th>
+                                <th>Fine Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="citations-tbody">
+                            <!-- Rows will be added by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: Issue New Citation -->
+            <div id="issue-citation" class="content-section">
+                <h3>Issue New Citation</h3>
+
+                <!-- Success Message -->
+                <div id="success-message" class="alert alert-success success-alert">
+                    <span id="success-text"></span>
+                </div>
+
+                <!-- Error Message -->
+                <div id="form-error-message" class="alert alert-error" style="display: none;">
+                    <span id="form-error-text"></span>
+                </div>
+
+                <!-- Issue Citation Form -->
+                <form id="issue-citation-form">
+                    <!-- Driver Information -->
+                    <h4 style="color: var(--secondary-color); margin-top: 1.5rem; margin-bottom: 1rem;">Driver Information</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="driver-license">Driver License Number *</label>
+                            <input 
+                                type="text" 
+                                id="driver-license" 
+                                name="driver_license"
+                                placeholder="e.g., D1234567" 
+                                required
+                            >
+                            <small class="error-hint" id="driver-license-error"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="driver-name">Driver Name *</label>
+                            <input 
+                                type="text" 
+                                id="driver-name" 
+                                name="driver_name"
+                                placeholder="Full name" 
+                                required
+                            >
+                            <small class="error-hint" id="driver-name-error"></small>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Information -->
+                    <h4 style="color: var(--secondary-color); margin-top: 1.5rem; margin-bottom: 1rem;">Vehicle Information</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicle-plate">License Plate *</label>
+                            <input 
+                                type="text" 
+                                id="vehicle-plate" 
+                                name="vehicle_plate"
+                                placeholder="e.g., ABC1234" 
+                                required
+                            >
+                            <small class="error-hint" id="vehicle-plate-error"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicle-make">Vehicle Make *</label>
+                            <input 
+                                type="text" 
+                                id="vehicle-make" 
+                                name="vehicle_make"
+                                placeholder="e.g., Honda" 
+                                required
+                            >
+                            <small class="error-hint" id="vehicle-make-error"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicle-model">Vehicle Model *</label>
+                            <input 
+                                type="text" 
+                                id="vehicle-model" 
+                                name="vehicle_model"
+                                placeholder="e.g., Civic" 
+                                required
+                            >
+                            <small class="error-hint" id="vehicle-model-error"></small>
+                        </div>
+                    </div>
+
+                    <!-- Citation Details -->
+                    <h4 style="color: var(--secondary-color); margin-top: 1.5rem; margin-bottom: 1rem;">Citation Details</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="violation-type">Violation Type *</label>
+                            <select id="violation-type" name="violation_type" required>
+                                <option value="">Select a violation</option>
+                                <option value="Speeding">Speeding</option>
+                                <option value="Reckless Driving">Reckless Driving</option>
+                                <option value="Running Red Light">Running Red Light</option>
+                                <option value="Improper Lane Change">Improper Lane Change</option>
+                                <option value="Expired Registration">Expired Registration</option>
+                                <option value="No Seatbelt">No Seatbelt</option>
+                                <option value="Illegal Parking">Illegal Parking</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <small class="error-hint" id="violation-type-error"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="violation-location">Location *</label>
+                            <input 
+                                type="text" 
+                                id="violation-location" 
+                                name="violation_location"
+                                placeholder="e.g., Broadway & 42nd St" 
+                                required
+                            >
+                            <small class="error-hint" id="violation-location-error"></small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fine-amount">Fine Amount ($) *</label>
+                            <input 
+                                type="number" 
+                                id="fine-amount" 
+                                name="fine_amount"
+                                placeholder="e.g., 150.00" 
+                                min="0"
+                                step="0.01"
+                                required
+                            >
+                            <small class="error-hint" id="fine-amount-error"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="violation-description">Description</label>
+                            <textarea 
+                                id="violation-description" 
+                                name="violation_description"
+                                placeholder="Additional details about the violation"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="form-submit">
+                        <button type="submit" class="btn btn-secondary btn-block">
+                            <span id="submit-text">Issue Citation</span>
+                            <span id="submit-spinner" class="spinner" style="display: none;"></span>
+                        </button>
+                        <button type="reset" class="btn btn-outline btn-block">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2026 New York Police Department. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <!-- JavaScript Files -->
+        <script src="../js/auth.js"></script>
+        <script src="../js/api.js"></script>
+        <script src="officer-dashboard.js"></script>
+
+    </body>
+</html>
