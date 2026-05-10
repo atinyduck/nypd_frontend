@@ -4,17 +4,17 @@
 const API_BASE_URL = 'http://localhost:8000';
 
 /**
- * Driver Login
+ * Driver Login - License number only
  * @param {string} licenseNumber - Driver's license number
- * @param {string} password - Driver's password
  * @returns {object} - { success: bool, message: string, token?: string }
  */
-async function driverLogin(licenseNumber, password) {
+async function driverLogin(licenseNumber) {
   try {
     // Create FormData for OAuth2 format (FastAPI expects this)
+    // For drivers, use license number as both username and password
     const formData = new FormData();
-    formData.append('username', licenseNumber);  // API expects 'username'
-    formData.append('password', password);
+    formData.append('username', licenseNumber);
+    formData.append('password', licenseNumber);  // Use license number as password
     
     // Call the /token endpoint
     const response = await fetch(`${API_BASE_URL}/token`, {
@@ -40,7 +40,7 @@ async function driverLogin(licenseNumber, password) {
       const error = await response.json();
       return { 
         success: false, 
-        message: error.detail || 'Invalid credentials'
+        message: error.detail || 'License number not found'
       };
     }
   } catch (error) {
@@ -51,6 +51,7 @@ async function driverLogin(licenseNumber, password) {
     };
   }
 }
+
 
 /**
  * Admin Login

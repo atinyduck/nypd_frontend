@@ -20,10 +20,9 @@ async function handleLogin(e) {
   
   // Get form values
   const licenseNumber = document.getElementById('license-number').value.trim();
-  const password = document.getElementById('password').value.trim();
   
   // Validate inputs (client-side)
-  if (!validateLoginForm(licenseNumber, password)) {
+  if (!validateLoginForm(licenseNumber)) {
     return;  // Stop if validation fails
   }
   
@@ -32,7 +31,7 @@ async function handleLogin(e) {
   
   try {
     // Call the login function from auth.js
-    const response = await driverLogin(licenseNumber, password);
+    const response = await driverLogin(licenseNumber);
     
     if (response.success) {
       // Verify user type is driver
@@ -42,7 +41,7 @@ async function handleLogin(e) {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userType');
         sessionStorage.removeItem('licenseNumber');
-        showErrorMessage('Invalid driver credentials. Please use your driver license and password.');
+        showErrorMessage('Invalid driver license number. Please try again.');
         hideLoading();
         return;
       }
@@ -69,15 +68,13 @@ async function handleLogin(e) {
 /**
  * Validate login form inputs
  * @param {string} licenseNumber - Driver's license number
- * @param {string} password - Driver's password
  * @returns {boolean} - True if valid, false otherwise
  */
-function validateLoginForm(licenseNumber, password) {
+function validateLoginForm(licenseNumber) {
   let isValid = true;
   
   // Clear previous error messages
   document.getElementById('license-error').textContent = '';
-  document.getElementById('password-error').textContent = '';
   
   // Validate license number
   if (!licenseNumber) {
@@ -85,15 +82,6 @@ function validateLoginForm(licenseNumber, password) {
     isValid = false;
   } else if (licenseNumber.length < 3) {
     document.getElementById('license-error').textContent = 'License number must be at least 3 characters';
-    isValid = false;
-  }
-  
-  // Validate password
-  if (!password) {
-    document.getElementById('password-error').textContent = 'Password is required';
-    isValid = false;
-  } else if (password.length < 6) {
-    document.getElementById('password-error').textContent = 'Password must be at least 6 characters';
     isValid = false;
   }
   
