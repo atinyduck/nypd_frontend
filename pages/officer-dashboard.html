@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>NYPD Citation System - Officer Dashboard</title>
+        <link rel="stylesheet" href="../css/styles.css">
         <link rel="stylesheet" href="../css/dashboard.css">
     </head>
 
@@ -52,7 +53,7 @@
 
             <!-- Dashboard Tabs -->
             <div class="dashboard-tabs">
-                <button class="tab-btn active" data-tab="view-citations">📋 View All Citations</button>
+                <button class="tab-btn active" data-tab="view-citations">View All Citations</button>
                 <button class="tab-btn" data-tab="issue-citation">➕ Issue New Citation</button>
             </div>
 
@@ -72,7 +73,7 @@
                         </select>
                     </div>
                     <button class="btn btn-secondary" id="apply-filter-btn">Apply Filter</button>
-                    <button class="btn btn-primary" id="refresh-btn">🔄 Refresh</button>
+                    <button class="btn btn-primary" id="refresh-btn">Refresh</button>
                 </div>
 
                 <!-- Loading State -->
@@ -88,7 +89,7 @@
 
                 <!-- Empty State -->
                 <div id="empty-state" class="no-data" style="display: none;">
-                    <p>📋 No citations found</p>
+                    <p>No citations found</p>
                 </div>
 
                 <!-- Citations Table -->

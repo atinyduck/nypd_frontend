@@ -35,6 +35,18 @@ async function handleLogin(e) {
     const response = await driverLogin(licenseNumber, password);
     
     if (response.success) {
+      // Verify user type is driver
+      const userType = sessionStorage.getItem('userType');
+      if (userType !== 'driver') {
+        // Wrong credentials for driver - clear and show error
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userType');
+        sessionStorage.removeItem('licenseNumber');
+        showErrorMessage('Invalid driver credentials. Please use your driver license and password.');
+        hideLoading();
+        return;
+      }
+      
       // Show success message
       showSuccessMessage('Login successful! Redirecting...');
       
