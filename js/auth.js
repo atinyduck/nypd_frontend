@@ -141,3 +141,80 @@ function requireAuth() {
     window.location.href = '../pages/driver-login.html';
   }
 }
+
+/**
+ * Officer Login
+ * @param {string} badgeNumber - Officer's badge number
+ * @param {string} password - Officer's password
+ * @returns {object} - { success: bool, message: string, token?: string }
+ */
+async function officerLogin(badgeNumber, password) {
+  try {
+    const formData = new FormData();
+    formData.append('username', badgeNumber);  // API expects 'username'
+    formData.append('password', password);
+    
+    const response = await fetch(`${API_BASE_URL}/token`, {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      
+      // Store token for officer
+      sessionStorage.setItem('token', data.access_token);
+      sessionStorage.setItem('userType', 'officer');
+      sessionStorage.setItem('badgeNumber', badgeNumber);
+      
+      return { 
+        success: true, 
+        message: 'Officer login successful',
+        token: data.access_token 
+      };
+    } else {
+      const error = await response.json();
+      return { 
+        success: false, 
+        message: error.detail || 'Invalid credentials'
+      };
+    }
+  } catch (error) {
+    console.error('Officer login error:', error);
+    return { 
+      success: false, 
+      message: 'Connection failed. Please try again.' 
+    };
+  }
+}
+
+/**
+ * Get user ID (license number for drivers, badge number for officers)
+ * @returns {string|null} - License or badge number, or null
+ */
+function getUserId() {
+  const userType = getUserType();
+  if (userType === 'driver') {
+    return sessionStorage.getItem('licenseNumber');
+  } else if (userType === 'officer') {
+    return sessionStorage.getItem('badgeNumber');
+  }
+  return null;
+}
+
+/**
+ * Redirect to appropriate login if not authenticated
+ * @param {string} requiredType - Optional: 'driver' or 'officer' to restrict page
+ */
+function requireAuth(requiredType) {
+  if (!isLoggedIn()) {
+    window.location.href = '../pages/driver-login.html';
+    return;
+  }
+  
+  // If a specific user type is required, check it
+  if (requiredType && getUserType() !== requiredType) {
+    alert('Unauthorized access. Logging you out.');
+    logout();
+  }
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NYPD Citation System - Officer Login</title>
+        <link rel="stylesheet" href="../css/styles.css">
+    </head>
+
+    <body>
+        <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="logo">
+          <h1>NYPD Citation System</h1>
+        </div>
+        
+        <ul class="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="driver-login.html">Driver Login</a></li>
+          <li><a href="officer-login.html" class="active">Officer Login</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- MAIN LOGIN CONTAINER -->
+    <main class="login-main">
+      <div class="login-container">
+        <div class="login-box">
+          <!-- Title -->
+          <h2>Officer Login</h2>
+          <p class="login-subtitle">Access the citation management system</p>
+          
+          <!-- Error Message (hidden by default) -->
+          <div id="error-message" class="alert alert-error" style="display: none;">
+            <span id="error-text"></span>
+          </div>
+          
+          <!-- Success Message (hidden by default) -->
+          <div id="success-message" class="alert alert-success" style="display: none;">
+            <span id="success-text"></span>
+          </div>
+          
+          <!-- LOGIN FORM -->
+          <form id="login-form">
+            <!-- Badge Number Field -->
+            <div class="form-group">
+              <label for="badge-number">Badge Number</label>
+              <input 
+                type="text" 
+                id="badge-number" 
+                name="badge_number"
+                placeholder="e.g., B123456" 
+                required
+              >
+              <small class="error-hint" id="badge-error"></small>
+            </div>
+            
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password"
+                placeholder="Enter your password" 
+                required
+              >
+              <small class="error-hint" id="password-error"></small>
+            </div>
+            
+            <!-- Remember Me Checkbox -->
+            <div class="form-group checkbox">
+              <input type="checkbox" id="remember-me" name="remember_me">
+              <label for="remember-me">Remember me</label>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-secondary btn-block">
+              <span id="btn-text">Login</span>
+              <span id="btn-spinner" class="spinner" style="display: none;"></span>
+            </button>
+          </form>
+          
+          <!-- Links -->
+          <div class="login-links">
+            <p><a href="../index.html">Back to Home</a></p>
+          </div>
+          
+          <!-- Demo Info -->
+          <div class="demo-info">
+            <h4>Demo Credentials:</h4>
+            <p><strong>Badge:</strong> B123456</p>
+            <p><strong>Password:</strong> password123</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2026 New York Police Department. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="officer-login.js"></script>
+
+    </body>
+</html>
