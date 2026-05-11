@@ -1,7 +1,14 @@
 // auth.js
 // Authentication functions for NYPD Citation System
+// Note: API_BASE_URL is defined in api.js
 
-const API_BASE_URL = 'http://localhost:8000';
+// Store configuration
+const STORAGE_KEYS = {
+  TOKEN: 'token',
+  USER_TYPE: 'userType',
+  LICENSE_NUMBER: 'licenseNumber',
+  BADGE_NUMBER: 'badgeNumber'
+};
 
 /**
  * Driver Login - License number only
@@ -150,43 +157,23 @@ function requireAuth() {
  * @returns {object} - { success: bool, message: string, token?: string }
  */
 async function officerLogin(badgeNumber, password) {
-  try {
-    const formData = new FormData();
-    formData.append('username', badgeNumber);  // API expects 'username'
-    formData.append('password', password);
-    
-    const response = await fetch(`${API_BASE_URL}/token`, {
-      method: 'POST',
-      body: formData
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      
-      // Store token for officer
-      sessionStorage.setItem('token', data.access_token);
-      sessionStorage.setItem('userType', 'officer');
-      sessionStorage.setItem('badgeNumber', badgeNumber);
-      
-      return { 
-        success: true, 
-        message: 'Officer login successful',
-        token: data.access_token 
-      };
-    } else {
-      const error = await response.json();
-      return { 
-        success: false, 
-        message: error.detail || 'Invalid credentials'
-      };
-    }
-  } catch (error) {
-    console.error('Officer login error:', error);
-    return { 
-      success: false, 
-      message: 'Connection failed. Please try again.' 
-    };
-  }
+  return adminLogin(badgeNumber, password);
+}
+
+/**
+ * Get license number from session
+ * @returns {string|null}
+ */
+function getLicenseNumber() {
+  return sessionStorage.getItem('licenseNumber');
+}
+
+/**
+ * Get badge number from session
+ * @returns {string|null}
+ */
+function getBadgeNumber() {
+  return sessionStorage.getItem('badgeNumber');
 }
 
 /**
@@ -197,7 +184,7 @@ function getUserId() {
   const userType = getUserType();
   if (userType === 'driver') {
     return sessionStorage.getItem('licenseNumber');
-  } else if (userType === 'officer') {
+  } else if (userType === 'admin' || userType === 'officer') {
     return sessionStorage.getItem('badgeNumber');
   }
   return null;
@@ -205,11 +192,15 @@ function getUserId() {
 
 /**
  * Redirect to appropriate login if not authenticated
- * @param {string} requiredType - Optional: 'driver' or 'officer' to restrict page
+ * @param {string} requiredType - Optional: 'driver' or 'admin' to restrict page
  */
-function requireAuth(requiredType) {
+function requireAuthByType(requiredType) {
   if (!isLoggedIn()) {
-    window.location.href = '../pages/driver-login.html';
+    if (requiredType === 'driver') {
+      window.location.href = '../pages/driver-login.html';
+    } else {
+      window.location.href = '../pages/officer-login.html';
+    }
     return;
   }
   
@@ -219,3 +210,5 @@ function requireAuth(requiredType) {
     logout();
   }
 }
+
+// end of auth.js

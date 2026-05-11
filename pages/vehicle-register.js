@@ -1,69 +1,82 @@
-// driver-register.js
-// Driver registration form handling and validation
+// vehicle-register.js
+// Vehicle registration form handling and validation
 
 // Form validation rules
 const VALIDATION_RULES = {
-  firstName: {
+  vin: {
     required: true,
-    pattern: /^[a-zA-Z\s'-]{2,50}$/,
-    message: 'First name must be 2-50 characters and contain only letters, spaces, hyphens, or apostrophes'
+    length: 17,
+    pattern: /^[A-HJ-NPR-Z0-9]{17}$/,
+    message: 'VIN must be exactly 17 characters (numbers and letters, no I, O, Q)'
   },
-  lastName: {
+  make: {
     required: true,
-    pattern: /^[a-zA-Z\s'-]{2,50}$/,
-    message: 'Last name must be 2-50 characters and contain only letters, spaces, hyphens, or apostrophes'
+    minLength: 2,
+    pattern: /^[a-zA-Z0-9\s-]{2,50}$/,
+    message: 'Make must be 2-50 characters'
   },
-  birthDate: {
+  model: {
     required: true,
-    custom: validateBirthDate,
-    message: 'Please enter a valid birth date (must be 18 or older)'
+    minLength: 2,
+    pattern: /^[a-zA-Z0-9\s-]{2,50}$/,
+    message: 'Model must be 2-50 characters'
   },
-  address: {
+  color: {
     required: true,
-    minLength: 5,
-    message: 'Please enter a valid address'
+    minLength: 2,
+    pattern: /^[a-zA-Z\s]{2,50}$/,
+    message: 'Color must be 2-50 letters only'
   },
-  licenseNumber: {
+  year: {
     required: true,
-    pattern: /^[A-Z]{1,2}\d{6,8}$/,
-    message: 'License number must be in format: STATE + 6-8 digits (e.g., NY1234567)'
+    custom: validateYear,
+    message: 'Please enter a valid year (1900-2100)'
   },
-  licenseState: {
+  licensePlate: {
+    required: true,
+    minLength: 2,
+    pattern: /^[A-Z0-9]{2,10}$/,
+    message: 'License plate format invalid (2-10 alphanumeric characters)'
+  },
+  plateState: {
     required: true,
     message: 'Please select a state'
   }
 };
 
-// Birth date validation function
-function validateBirthDate(value) {
-  const birthDate = new Date(value);
-  const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    return false;
-  }
-
-  return age >= 18 && age <= 120;
+// Year validation function
+function validateYear(value) {
+  const year = parseInt(value);
+  const currentYear = new Date().getFullYear();
+  return year >= 1900 && year <= currentYear + 1;
 }
 
 // Get form elements
-const form = document.getElementById('registrationForm');
+const form = document.getElementById('vehicleForm');
 const successMessage = document.getElementById('successMessage');
 
 // Initialize form on page load
 document.addEventListener('DOMContentLoaded', function() {
-  // Prevent registration if already logged in
-  if (typeof isLoggedIn === 'function' && isLoggedIn()) {
-    window.location.href = 'driver-dashboard.html';
+  // Prevent registration if not logged in
+  if (typeof isLoggedIn === 'function' && !isLoggedIn()) {
+    window.location.href = 'driver-register.html';
   }
 
   // Set up form submission
-  form.addEventListener('submit', handleRegistrationSubmit);
+  form.addEventListener('submit', handleVehicleSubmit);
 
   // Add real-time validation
   setupRealTimeValidation();
+
+  // Format VIN input to uppercase
+  document.getElementById('vin').addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+  });
+
+  // Format license plate to uppercase
+  document.getElementById('licensePlate').addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+  });
 });
 
 /**
@@ -102,6 +115,12 @@ function validateField(field) {
   // Check required
   if (rules.required && !value) {
     showFieldError(field, errorElement, 'This field is required');
+    return false;
+  }
+
+  // Check exact length
+  if (rules.length && value && value.length !== rules.length) {
+    showFieldError(field, errorElement, `Must be exactly ${rules.length} characters`);
     return false;
   }
 
@@ -174,7 +193,7 @@ function validateForm() {
  * Handle form submission
  * @param {Event} event - Form submission event
  */
-async function handleRegistrationSubmit(event) {
+async function handleVehicleSubmit(event) {
   event.preventDefault();
 
   // Validate form
@@ -185,37 +204,52 @@ async function handleRegistrationSubmit(event) {
 
   // Collect form data
   const formData = {
-    firstName: document.getElementById('firstName').value.trim(),
-    lastName: document.getElementById('lastName').value.trim(),
-    birthDate: document.getElementById('birthDate').value,
-    address: document.getElementById('address').value.trim(),
-    licenseNumber: document.getElementById('licenseNumber').value.trim(),
-    licenseState: document.getElementById('licenseState').value
+    vin: document.getElementById('vin').value.toUpperCase(),
+    make: document.getElementById('make').value.trim(),
+    model: document.getElementById('model').value.trim(),
+    color: document.getElementById('color').value.trim(),
+    licensePlate: document.getElementById('licensePlate').value.toUpperCase(),
+    licenseState: document.getElementById('plateState').value
   };
 
   try {
-    // Call API to register driver
-    const result = await registerDriver(formData);
-
-    if (result.success) {
-      // Show success message
-      successMessage.style.display = 'block';
+    // Get authentication token
+    const token = typeof getToken === 'function' ? getToken() : null;
+    
+    // If authenticated, use authenticated endpoint
+    if (token) {
+      const result = await createVehicle(formData, token);
       
-      // Clear form
-      form.reset();
-
-      // Redirect to login after 2 seconds
-      setTimeout(() => {
-        window.location.href = 'driver-login.html';
-      }, 2000);
+      if (result.success) {
+        showSuccess();
+      } else {
+        alert('Vehicle registration failed: ' + result.error);
+      }
     } else {
-      // Show error message
-      alert('Registration failed: ' + result.error);
+      // Use public registration endpoint
+      const result = await registerVehicle(formData);
+      
+      if (result.success) {
+        showSuccess();
+      } else {
+        alert('Vehicle registration failed: ' + result.error);
+      }
     }
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Vehicle registration error:', error);
     alert('An error occurred during registration. Please try again.');
   }
 }
 
-// end of driver-register.js
+/**
+ * Show success message and reset form
+ */
+function showSuccess() {
+  successMessage.style.display = 'block';
+  form.reset();
+  
+  // Scroll to success message
+  successMessage.scrollIntoView({ behavior: 'smooth' });
+}
+
+// end of vehicle-register.js

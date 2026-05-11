@@ -1,0 +1,213 @@
+/* ========================================
+   REGISTRATION PAGE STYLES
+   ======================================== */
+
+/* Main registration container */
+.registration-main {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-color);
+  padding: 2rem 0;
+}
+
+.registration-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
+}
+
+.registration-box {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-lg);
+  border-top: 4px solid var(--primary-color);
+}
+
+.registration-box h1 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.registration-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+/* Section headings in registration form */
+.registration-box h3 {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--light-color);
+}
+
+.registration-box h3:first-of-type {
+  margin-top: 0;
+}
+
+/* Form rows for multi-column layouts */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Button group for submission buttons */
+.registration-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.registration-buttons .btn {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .registration-buttons {
+    flex-direction: column;
+  }
+  
+  .registration-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Success message alert box */
+.success-alert {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-left: 4px solid var(--success-color);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  display: none;
+}
+
+.success-alert.show {
+  display: block;
+}
+
+.success-alert a {
+  color: #15803d;
+  font-weight: 600;
+}
+
+/* Loading spinner overlay */
+.loading-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-overlay.show {
+  display: flex;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 61, 165, 0.1);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Form validation errors */
+.form-error {
+  border-color: var(--danger-color) !important;
+  background-color: #fee2e2;
+}
+
+.form-error:focus {
+  box-shadow: 0 0 0 3px rgba(193, 30, 59, 0.1) !important;
+  border-color: var(--danger-color) !important;
+}
+
+/* Error message below form field */
+.field-error {
+  display: none;
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.field-error.show {
+  display: block;
+}
+
+/* Input hints */
+.field-hint {
+  display: block;
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Bottom links */
+.registration-links {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.registration-links a {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.registration-links a:hover {
+  text-decoration: underline;
+  color: var(--primary-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .registration-box {
+    padding: 2rem 1rem;
+  }
+  
+  .registration-box h1 {
+    font-size: 1.5rem;
+  }
+  
+  .registration-box h3 {
+    font-size: 1rem;
+    margin-top: 1.5rem;
+  }
+}
