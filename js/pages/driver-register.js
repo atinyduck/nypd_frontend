@@ -36,16 +36,48 @@ const VALIDATION_RULES = {
 
 // Birth date validation function
 function validateBirthDate(value) {
-  const birthDate = new Date(value);
-  const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    return false;
+  if (!value) return false;
+  
+  let year, month, day;
+  
+  // Try parsing YYYY-MM-DD format 
+  if (value.includes('-')) {
+    const parts = value.split('-');
+    if (parts.length === 3) {
+      year = parseInt(parts[0]);
+      month = parseInt(parts[1]);
+      day = parseInt(parts[2]);
+    }
   }
+  // Try parsing MM/DD/YYYY format 
+  else if (value.includes('/')) {
+    const parts = value.split('/');
+    if (parts.length === 3) {
+      month = parseInt(parts[0]);
+      day = parseInt(parts[1]);
+      year = parseInt(parts[2]);
+    }
+  }
+  
+  // Validate parsed values
+  if (!year || !month || !day) return false;
+  if (month < 1 || month > 12 || day < 1 || day > 31) return false;
+  if (year < 1900 || year > 2100) return false;
+  
+  // Use UTC to avoid timezone/DST issues
+  const birthDate = new Date(Date.UTC(year, month - 1, day));
+  const today = new Date();
+  
+  // Calculate age in years
+  const age = today.getFullYear() - birthDate.getUTCFullYear();
+  const monthDiff = today.getMonth() - (birthDate.getUTCMonth());
+  const dayDiff = today.getDate() - birthDate.getUTCDate();
+  
+  // Adjust age if birthday hasn't occurred yet this year
+  const birthdayNotOccurredYet = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0);
+  const finalAge = birthdayNotOccurredYet ? age - 1 : age;
 
-  return age >= 18 && age <= 120;
+  return finalAge >= 18 && finalAge <= 120;
 }
 
 // Get form elements

@@ -4,6 +4,7 @@
 
 /* Dashboard Header */
 .dashboard-header {
+    background: var(--primary-color);
     color: white;
     padding: 2rem;
     margin-bottom: 2rem;
